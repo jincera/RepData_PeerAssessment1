@@ -1,11 +1,6 @@
----
-title: "Reproducible Research: Peer Assessment 1"
-author: José Incera
-date: Apr 2015
-output: 
-  html_document:
-    keep_md: true
----
+# Reproducible Research: Peer Assessment 1
+José Incera  
+Apr 2015  
 
 ## Introduction
 This report answers the requirements of Assesment 1 of the course Reproducible Research.
@@ -20,9 +15,14 @@ We start by reading the data from the activity.csv file and checking how many da
 **We assume that the file has already been unzipped and is in the working directory**
 
 
-````{r, cache=TRUE}
+
+```r
 rawData<-read.csv("activity.csv")
 nlevels(rawData$date)
+```
+
+```
+## [1] 61
 ```
 
 ## What is mean total number of steps taken per day?
@@ -31,21 +31,42 @@ To summarise the raw data by date and compute the total sum per day,  we will us
 Observe that we may ignore the missing values for this section
 
 
-```{r, cache=TRUE}
+
+```r
 library(dplyr)
+```
+
+```
+## 
+## Attaching package: 'dplyr'
+## 
+## The following object is masked from 'package:stats':
+## 
+##     filter
+## 
+## The following objects are masked from 'package:base':
+## 
+##     intersect, setdiff, setequal, union
+```
+
+```r
 tmp<-group_by(rawData,date)
 sumPerDay <- summarise(tmp,totSteps=sum(steps,na.rm=T))
-````
+```
 
 Let us see the histogram
 
-```{r, cache=TRUE}
+
+```r
 hist(sumPerDay$totSteps,breaks=10,col="lightgreen",main="TotalSteps")
-````
+```
+
+![](PA1_template_files/figure-html/unnamed-chunk-3-1.png) 
 
 ... and the mean and median of the total number of steps per day (that is, the mean and median of the data used for the histogram, not the mean and median for the data corresponding to each day)
 
-````{r}
+
+```r
 avgTotSteps = mean(sumPerDay$totSteps)
 
 medianTotSteps = median(sumPerDay$totSteps)
@@ -61,16 +82,30 @@ The results are consistent: the highest bar, which corresponds to the median, is
 
 Now we summarise per interval and compute the average over the intervals
 
-```{r,cache=TRUE}
+
+```r
 tmp=group_by(rawData,interval)
 meanPerInterval<-summarise(tmp,avgSteps=mean(steps,na.rm=T))
 ```
 
 Let us plot this average and find out which interval has the maximum number of steps
 
-```{r,cache=T}
+
+```r
 plot(meanPerInterval,type="l",las=2)
+```
+
+![](PA1_template_files/figure-html/unnamed-chunk-6-1.png) 
+
+```r
 meanPerInterval[meanPerInterval$avgSteps == max(meanPerInterval$avgSteps),1]
+```
+
+```
+## Source: local data frame [1 x 1]
+## 
+##   interval
+## 1      835
 ```
 
 It looks Ok: the peak is between intervals 500 and 1000; our computations says it is interval 835
