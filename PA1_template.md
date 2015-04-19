@@ -28,6 +28,7 @@ nlevels(rawData$date)
 ## What is mean total number of steps taken per day?
 
 To summarise the raw data by date and compute the total sum per day,  we will use the dplyr package.
+
 Observe that we may ignore the missing values for this section
 
 
@@ -70,17 +71,18 @@ hist(sumPerDay$totSteps,breaks=10,col="lightgreen",main="TotalSteps")
 avgTotSteps = mean(sumPerDay$totSteps)
 
 medianTotSteps = median(sumPerDay$totSteps)
+
+sprintf("Mean total steps: %f; median: %f",avgTotSteps,medianTotSteps)
 ```
 
-The results are consistent: the highest bar, which corresponds to the median, is above the 10,000 value
+```
+## [1] "Mean total steps: 9354.229508; median: 10395.000000"
+```
+
 
 ## What is the average daily activity pattern?
 
-* *Make a time series plot (i.e. type = "l") of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all days (y-axis)*
-
-* *Which 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps?*
-
-Now we summarise per interval and compute the average over the intervals
+In order to answer this question, we summarise per interval and compute the average over the intervals
 
 
 ```r
@@ -92,7 +94,8 @@ Let us plot this average and find out which interval has the maximum number of s
 
 
 ```r
-plot(meanPerInterval,type="l",las=2)
+plot(meanPerInterval, type="l",xaxt='n')
+axis(1,at=seq(0,2355,by=100),las=2)
 ```
 
 ![](PA1_template_files/figure-html/unnamed-chunk-6-1.png) 
