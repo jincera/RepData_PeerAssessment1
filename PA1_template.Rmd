@@ -20,7 +20,7 @@ We start by reading the data from the activity.csv file and checking how many da
 **We assume that the file has already been unzipped and is in the working directory**
 
 
-````{r, cache=TRUE}
+````{r}
 rawData<-read.csv("activity.csv")
 nlevels(rawData$date)
 ```
@@ -32,7 +32,7 @@ To summarise the raw data by date and compute the total sum per day,  we will us
 Observe that we may ignore the missing values for this section
 
 
-```{r, cache=TRUE}
+```{r}
 library(dplyr)
 tmp<-group_by(rawData,date)
 sumPerDay <- summarise(tmp,totSteps=sum(steps,na.rm=T))
@@ -40,13 +40,13 @@ sumPerDay <- summarise(tmp,totSteps=sum(steps,na.rm=T))
 
 Let us see the histogram
 
-```{r, cache=TRUE}
+```{r}
 hist(sumPerDay$totSteps,breaks=10,col="lightgreen",main="TotalSteps")
 ````
 
 ... and the mean and median of the total number of steps per day (that is, the mean and median of the data used for the histogram, not the mean and median for the data corresponding to each day)
 
-````{r, cache=TRUE}
+````{r}
 avgTotSteps = mean(sumPerDay$totSteps)
 
 medianTotSteps = median(sumPerDay$totSteps)
@@ -59,14 +59,14 @@ sprintf("Mean total steps: %f; median: %f",avgTotSteps,medianTotSteps)
 
 In order to answer this question, we summarise per interval and compute the average over the intervals
 
-```{r,cache=TRUE}
+```{r}
 tmp=group_by(rawData,interval)
 meanPerInterval<-summarise(tmp,avgSteps=mean(steps,na.rm=T))
 ```
 
 Let us plot this average and find out which interval has the maximum number of steps
 
-```{r,cache=T}
+```{r}
 
 plot(meanPerInterval, type="l",xaxt='n')
 axis(1,at=seq(0,2355,by=100),las=2)
@@ -83,7 +83,7 @@ Since we have already computed the average of the 5-minute intervals, it seems i
 
 Let us start by computing the missing values in the dataset. 
 
-```{r, cache=TRUE}
+```{r}
   missingValues<-which(is.na(rawData))
   mv <- length(missingValues)
   sprintf("The total missing values is> %d",mv)
@@ -105,7 +105,7 @@ for ( i in 1: nrow(rd)){
 
 Now let us see the histogram, mean and median of the new data set.
 
-```{r,cache=TRUE}
+```{r}
 tmp2<-group_by(rd,date)
 spd <- summarise(tmp2,totSteps=sum(steps,na.rm=T))
 
@@ -122,8 +122,27 @@ It has certainly changed!  We have a histogram that look more symmetric.  The mo
 
 ## Are there differences in activity patterns between weekdays and weekends?
 
-For this part the weekdays() function may be of some help here. Use the dataset with the filled-in missing values for this part.
+We create a new column dayOfWeek and another typeOfDay where weekend is "Saturday" and "Sunday" and weekday are all the others
 
-    Create a new factor variable in the dataset with two levels -- "weekday" and "weekend" indicating whether a given date is a weekday or weekend day.
+```{r}
+weekdays(as.Date(rd$date))->rd$dayOfWeek
+weekendDays<-c('Saturday','Sunday')
+rd$typeOfDay<-factor((rd$dayOfWeek %in% weekendDays)+1L,levels=1:2,labels=c('weekday','weekend'))
+```
 
-    Make a panel plot containing a time series plot (i.e. type = "l") of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all weekday days or weekend days (y-axis). The plot should look something like the following, which was created using simulated data:
+Let us plot the average number of steps with 5-minute intervals of weekdays vs weekends to see if there are some differences 
+
+```{r}
+t1<-group_by(rd[rd$typeOfDay=='weekend',],interval)
+t2<-group_by(rd[rd$typeOfDay=='weekday',],interval)
+meanwd<-summarise(t1,avgSteps=mean(steps))
+meanwe<-summarise(t2,avgSteps=mean(steps))
+    
+par(mfrow=c(2,1))
+plot(meanwd, type="l",xaxt='n')
+axis(1,at=seq(0,2355,by=100),las=2)
+plot(meanwe, type="l",xaxt='n')
+axis(1,at=seq(0,2355,by=100),las=2)
+
+```
+

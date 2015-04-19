@@ -171,12 +171,34 @@ sprintf("With imputed data, mean total steps: %f; median: %f",avts,medts)
 ## [1] "With imputed data, mean total steps: 10766.188679; median: 10766.188679"
 ```
 
-
+It has certainly changed!  We have a histogram that look more symmetric.  The most important observation is that the mean and median are much closer now
 
 ## Are there differences in activity patterns between weekdays and weekends?
 
-For this part the weekdays() function may be of some help here. Use the dataset with the filled-in missing values for this part.
+We create a new column dayOfWeek and another typeOfDay where weekend is "Saturday" and "Sunday" and weekday are all the others
 
-    Create a new factor variable in the dataset with two levels -- "weekday" and "weekend" indicating whether a given date is a weekday or weekend day.
 
-    Make a panel plot containing a time series plot (i.e. type = "l") of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all weekday days or weekend days (y-axis). The plot should look something like the following, which was created using simulated data:
+```r
+weekdays(as.Date(rd$date))->rd$dayOfWeek
+weekendDays<-c('Saturday','Sunday')
+rd$typeOfDay<-factor((rd$dayOfWeek %in% weekendDays)+1L,levels=1:2,labels=c('weekday','weekend'))
+```
+
+Let us plot the average number of steps with 5-minute intervals of weekdays vs weekends to see if there are some differences 
+
+
+```r
+t1<-group_by(rd[rd$typeOfDay=='weekend',],interval)
+t2<-group_by(rd[rd$typeOfDay=='weekday',],interval)
+meanwd<-summarise(t1,avgSteps=mean(steps))
+meanwe<-summarise(t2,avgSteps=mean(steps))
+    
+par(mfrow=c(2,1))
+plot(meanwd, type="l",xaxt='n')
+axis(1,at=seq(0,2355,by=100),las=2)
+plot(meanwe, type="l",xaxt='n')
+axis(1,at=seq(0,2355,by=100),las=2)
+```
+
+![](PA1_template_files/figure-html/unnamed-chunk-11-1.png) 
+
