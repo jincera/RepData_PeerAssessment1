@@ -73,15 +73,45 @@ axis(1,at=seq(0,2355,by=100),las=2)
 meanPerInterval[meanPerInterval$avgSteps == max(meanPerInterval$avgSteps),1]
 ```
 
-It looks Ok: the peak is between intervals 500 and 1000; our computations says it is interval 835
+It looks Ok: the peak is between intervals 500 and 1000; our computations says it is interval 835, that is, 8:35, which is actually the 104th lecture (we used the View command, not shown in the report)
 
 ## Imputing missing values
 
 In this segment we want to see if/how our statistics would change if we replace the missing data with some other (reasonable) value.
 
-  * *Calculate and report the total number of missing values in the dataset (i.e. the total number of rows with NAs)*
+Since we have already computed the average of the 5-minute intervals, it seems it is a good fit for the missing values.
+
+Let us start by computing the missing values in the dataset. Their indices will be stored in a vector.
+
+```{r, cache=TRUE}
+  missingValues<-which(is.na(rawData))
+  mv <- length(missingValues)
+  sprintf("The total missing values is> %d",mv)
+```
+
+
+    Devise a strategy for filling in all of the missing values in the dataset. The strategy does not need to be sophisticated. For example, you could use the mean/median for that day, or the mean for that 5-minute interval, etc.
+
+    Create a new dataset that is equal to the original dataset but with the missing data filled in.
+    
+    our mean is a table. convert it to a data frame
+
+```{r}
+mi <-as.data.frame(meanPerInterval) # Convert table to data frame
+
+rd = rawData
+for ( i in 1: nrow(rd)){
+  if(is.na(rd[i,1]))
+    rd[i,1]<- mi[rd[i,3],1]
+  }
   
-  
+  rawData[i,1]<- meanPerInterval[rawData[i,3],2]
+}
+
+    Make a histogram of the total number of steps taken each day and Calculate and report the mean and median total number of steps taken per day. Do these values differ from the estimates from the first part of the assignment? What is the impact of imputing missing data on the estimates of the total daily number of steps?
+
+
+    Calculate and report the total number of missing values in the dataset (i.e. the total number of rows with NAs)
 
     Devise a strategy for filling in all of the missing values in the dataset. The strategy does not need to be sophisticated. For example, you could use the mean/median for that day, or the mean for that 5-minute interval, etc.
 

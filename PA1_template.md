@@ -111,15 +111,35 @@ meanPerInterval[meanPerInterval$avgSteps == max(meanPerInterval$avgSteps),1]
 ## 1      835
 ```
 
-It looks Ok: the peak is between intervals 500 and 1000; our computations says it is interval 835
+It looks Ok: the peak is between intervals 500 and 1000; our computations says it is interval 835, that is, 8:35, which is actually the 104th lecture (we used the View command, not shown in the report)
 
 ## Imputing missing values
 
 In this segment we want to see if/how our statistics would change if we replace the missing data with some other (reasonable) value.
 
-  * *Calculate and report the total number of missing values in the dataset (i.e. the total number of rows with NAs)*
-  
-  
+Since we have already computed the average of the 5-minute intervals, it seems it is a good fit for the missing values.
+
+Let us start by computing the missing values in the dataset. Their indices will be stored in a vector
+
+
+```r
+  missingValues<-which(is.na(rawData))
+  mv <- length(missingValues)
+  sprintf("The total missing values is> %d",mv)
+```
+
+```
+## [1] "The total missing values is> 2304"
+```
+
+    Devise a strategy for filling in all of the missing values in the dataset. The strategy does not need to be sophisticated. For example, you could use the mean/median for that day, or the mean for that 5-minute interval, etc.
+
+    Create a new dataset that is equal to the original dataset but with the missing data filled in.
+
+    Make a histogram of the total number of steps taken each day and Calculate and report the mean and median total number of steps taken per day. Do these values differ from the estimates from the first part of the assignment? What is the impact of imputing missing data on the estimates of the total daily number of steps?
+
+
+    Calculate and report the total number of missing values in the dataset (i.e. the total number of rows with NAs)
 
     Devise a strategy for filling in all of the missing values in the dataset. The strategy does not need to be sophisticated. For example, you could use the mean/median for that day, or the mean for that 5-minute interval, etc.
 

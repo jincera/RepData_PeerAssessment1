@@ -113,17 +113,31 @@ axis(1,at=seq(0,2355,by=100),las=2)</code></pre>
 ## 
 ##   interval
 ## 1      835</code></pre>
-<p>It looks Ok: the peak is between intervals 500 and 1000; our computations says it is interval 835</p>
+<p>It looks Ok: the peak is between intervals 500 and 1000; our computations says it is interval 835, that is, 8:35, which is actually the 104th lecture (we used the View command, not shown in the report)</p>
 </div>
 <div id="imputing-missing-values" class="section level2">
 <h2>Imputing missing values</h2>
 <p>In this segment we want to see if/how our statistics would change if we replace the missing data with some other (reasonable) value.</p>
-<ul>
-<li><p><em>Calculate and report the total number of missing values in the dataset (i.e. the total number of rows with NAs)</em></p>
-<p>Devise a strategy for filling in all of the missing values in the dataset. The strategy does not need to be sophisticated. For example, you could use the mean/median for that day, or the mean for that 5-minute interval, etc.</p>
-<p>Create a new dataset that is equal to the original dataset but with the missing data filled in.</p>
-<p>Make a histogram of the total number of steps taken each day and Calculate and report the mean and median total number of steps taken per day. Do these values differ from the estimates from the first part of the assignment? What is the impact of imputing missing data on the estimates of the total daily number of steps?</p></li>
-</ul>
+<p>Since we have already computed the average of the 5-minute intervals, it seems it is a good fit for the missing values.</p>
+<p>Let us start by computing the missing values in the dataset. Their indices will be stored in a vector</p>
+<pre class="r"><code>  missingValues&lt;-which(is.na(rawData))
+  mv &lt;- length(missingValues)
+  sprintf(&quot;The total missing values is&gt; %d&quot;,mv)</code></pre>
+<pre><code>## [1] &quot;The total missing values is&gt; 2304&quot;</code></pre>
+<pre><code>Devise a strategy for filling in all of the missing values in the dataset. The strategy does not need to be sophisticated. For example, you could use the mean/median for that day, or the mean for that 5-minute interval, etc.
+
+Create a new dataset that is equal to the original dataset but with the missing data filled in.
+
+Make a histogram of the total number of steps taken each day and Calculate and report the mean and median total number of steps taken per day. Do these values differ from the estimates from the first part of the assignment? What is the impact of imputing missing data on the estimates of the total daily number of steps?
+
+
+Calculate and report the total number of missing values in the dataset (i.e. the total number of rows with NAs)
+
+Devise a strategy for filling in all of the missing values in the dataset. The strategy does not need to be sophisticated. For example, you could use the mean/median for that day, or the mean for that 5-minute interval, etc.
+
+Create a new dataset that is equal to the original dataset but with the missing data filled in.
+
+Make a histogram of the total number of steps taken each day and Calculate and report the mean and median total number of steps taken per day. Do these values differ from the estimates from the first part of the assignment? What is the impact of imputing missing data on the estimates of the total daily number of steps?</code></pre>
 </div>
 <div id="are-there-differences-in-activity-patterns-between-weekdays-and-weekends" class="section level2">
 <h2>Are there differences in activity patterns between weekdays and weekends?</h2>
