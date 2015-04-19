@@ -81,7 +81,7 @@ In this segment we want to see if/how our statistics would change if we replace 
 
 Since we have already computed the average of the 5-minute intervals, it seems it is a good fit for the missing values.
 
-Let us start by computing the missing values in the dataset. Their indices will be stored in a vector.
+Let us start by computing the missing values in the dataset. 
 
 ```{r, cache=TRUE}
   missingValues<-which(is.na(rawData))
@@ -89,35 +89,36 @@ Let us start by computing the missing values in the dataset. Their indices will 
   sprintf("The total missing values is> %d",mv)
 ```
 
+We will create a new dataset with the missing data replaced by the average previously computed in the meanPerInterval table
 
-    Devise a strategy for filling in all of the missing values in the dataset. The strategy does not need to be sophisticated. For example, you could use the mean/median for that day, or the mean for that 5-minute interval, etc.
-
-    Create a new dataset that is equal to the original dataset but with the missing data filled in.
-    
-    our mean is a table. convert it to a data frame
+We start by converting that table to a data frame and then we loop throught the whole number or rows looking for missing steps that have to be substituted
 
 ```{r}
 mi <-as.data.frame(meanPerInterval) # Convert table to data frame
 
-rd = rawData
+rd = rawData #New data set
 for ( i in 1: nrow(rd)){
   if(is.na(rd[i,1]))
-    rd[i,1]<- mi[rd[i,3],1]
+    rd[i,1]<- mi[mi$interval==rd[i,3],2]
   }
-  
-  rawData[i,1]<- meanPerInterval[rawData[i,3],2]
-}
+```
 
-    Make a histogram of the total number of steps taken each day and Calculate and report the mean and median total number of steps taken per day. Do these values differ from the estimates from the first part of the assignment? What is the impact of imputing missing data on the estimates of the total daily number of steps?
+Now let us see the histogram, mean and median of the new data set.
 
+```{r,cache=TRUE}
+tmp2<-group_by(rd,date)
+spd <- summarise(tmp2,totSteps=sum(steps,na.rm=T))
 
-    Calculate and report the total number of missing values in the dataset (i.e. the total number of rows with NAs)
+hist(spd$totSteps,breaks=10,col="lightgreen",main="TotalSteps")
 
-    Devise a strategy for filling in all of the missing values in the dataset. The strategy does not need to be sophisticated. For example, you could use the mean/median for that day, or the mean for that 5-minute interval, etc.
+avts = mean(spd$totSteps)
 
-    Create a new dataset that is equal to the original dataset but with the missing data filled in.
+medts = median(spd$totSteps)
 
-    Make a histogram of the total number of steps taken each day and Calculate and report the mean and median total number of steps taken per day. Do these values differ from the estimates from the first part of the assignment? What is the impact of imputing missing data on the estimates of the total daily number of steps?
+sprintf("With imputed data, mean total steps: %f; median: %f",avts,medts)
+```
+
+It has certainly changed!  We have a histogram that look more symmetric.  The most important observation is that the mean and median are much closer now
 
 ## Are there differences in activity patterns between weekdays and weekends?
 
